@@ -63,12 +63,12 @@ const labels = {
 //  Send card creation confirmation via
 //  chat.postMessage to the user who created it
 //
-const slackChannel = "#product-feedback"
 const sendConfirmation = (card) => {
+  const confirmationChannel = card.listId === feedbackList ? '#product-feedback' : '#bugs';
   axios.post('https://slack.com/api/chat.postMessage', qs.stringify({
     token: process.env.SLACK_ACCESS_TOKEN,
-    channel: slackChannel,
-    text: `new ${card.category} from ${card.userRealName}: ${card.title}`,
+    channel: confirmationChannel,
+    text: `new ${card.type} from <@${card.userId}>: ${card.title}`,
     attachments: JSON.stringify([
       {
         title: card.title,
@@ -124,7 +124,7 @@ const createCard = (userId, submission) => {
     card.userRealName = result;
     card.title = submission.title;
     card.description = submission.description;
-    card.category = submission.category;
+    card.type = submission.type;
     
     console.log('label ids:', card.labelIds)
     
