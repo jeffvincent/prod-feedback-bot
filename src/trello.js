@@ -43,19 +43,16 @@ const issuesList = '59f3384fd3edfd746350817c';
 
 // feedback labels
 const labels = {
-  important: '5925acffced82109ffc2fd75',
-  setup: '5b85924b52c2c466b895c620',
+  account: '5b85924b52c2c466b895c620',
   create: '5b8592530a0c2781d5075111',
   target: '5b859258a67e31197c2d4876',
   publish: '5b85925e8d0d394c7b29afc4',
   analyze: '5b8592627d7c6a81c766178f',
   general_ux: '5b8592679f87303b1017fffa',
-  kitchen_sink: '5b85926d8d0d394c7b29b453',
   feedback: '5b85b6cc0f1f8a598fedafdf',
   feature_request: '5b85b6d1126cf681ff088311',
   nps: '5b86e4a14566116e92cfbfb1',
-  new_user: '5b896cc541bdc11f23b6dfce',
-  power_user: '5b896cd13097bd42b543ef70',
+  kitchen_sink: '',
   bug: ''
 }
 

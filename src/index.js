@@ -76,8 +76,7 @@ app.post('/commands', (req, res) => {
             type: 'select',
             name: 'category',
             options: [
-              { label: 'Important', value: 'important' },
-              { label: 'Setup', value: 'setup' },
+              { label: 'Account/Install', value: 'account' },
               { label: 'Create', value: 'create' },
               { label: 'Target', value: 'target' },
               { label: 'Publish', value: 'publish' },
