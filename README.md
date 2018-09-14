@@ -1,17 +1,21 @@
-# Slack dialog --> Trello card
+# Feedback Friend
+_capturing your product feedbacks_
 
 🎏 Remixed from [https://glitch.com/~slack-slash-command-and-dialogs-blueprint](https://glitch.com/~slack-slash-command-and-dialogs-blueprint)
 
 ## What's this app now?
 
-This is a Slack app that creates Trello cards from dialog submissions in Slack. Specifically, here's what it does:
+This is a Slack app that creates Trello cards from dialog submissions in Slack. 
 
+Specifically, here's what it does:
 * Displays a [dialog](https://api.slack.com/dialogs) when a person in your Slack organization enters a particular [slash command](https://api.slack.com/slash-commands).
 * Takes the data submitted to that dialog, and [creates a Trello card](https://trello.readme.io/v1.0/reference#cards-2) with it.
 
-We use this to make it easy for our teammates to submit product feedback internally at Wistia. But you can use it for _anything_ – so long as that thing involves displaying a dialog in Slack, and creating Trello cards from it.
+We use this to make it easy for our teammates to submit product feedback internally at Appcues. But you can use it for _anything_ – so long as that thing involves displaying a dialog in Slack, and creating Trello cards from it.
 
-## Remixing Instructions
+---
+
+# If you wanna remix in Glitch
 
 ### 1. Remix this app in Glitch
 
