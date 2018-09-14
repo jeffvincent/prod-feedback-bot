@@ -68,7 +68,7 @@ const sendConfirmation = (card) => {
   axios.post('https://slack.com/api/chat.postMessage', qs.stringify({
     token: process.env.SLACK_ACCESS_TOKEN,
     channel: slackChannel,
-    text: `new ${card.category} from ${card.userRealName}: card.title`,
+    text: `new ${card.category} from ${card.userRealName}: ${card.title}`,
     attachments: JSON.stringify([
       {
         title: card.title,
