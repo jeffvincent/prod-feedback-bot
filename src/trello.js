@@ -30,8 +30,9 @@ const boardId = '583ef59fd8bbcbd409ba5293';
 //})
 
 
-const feedbackList = '5b8585b90a14bc2b75458891';
-const issuesList = '59f3384fd3edfd746350817c';
+const newFeedbackList = '5b8585b90a14bc2b75458891';
+const newIssuesList = '59f3384fd3edfd746350817c';
+const newOnboardingFeedback = '5bf31b780381150cd07d8312';
 
 // If you want to apply labels to your Trello cards based on input in the Slack dialog, first create the labels in Trello, then get their ids by uncommenting the following code:
 
@@ -43,13 +44,14 @@ const issuesList = '59f3384fd3edfd746350817c';
 
 // feedback labels
 const labels = {
+  onboarding: '5bf31bc43cb5ca740bffba45',
   account: '5b85924b52c2c466b895c620',
   create: '5b8592530a0c2781d5075111',
   target: '5b859258a67e31197c2d4876',
   publish: '5b85925e8d0d394c7b29afc4',
   analyze: '5b8592627d7c6a81c766178f',
   general_ux: '5b8592679f87303b1017fffa',
-  feedback: '5b85b6cc0f1f8a598fedafdf',
+  feedback: '',
   feature_request: '5b85b6d1126cf681ff088311',
   nps: '5b86e4a14566116e92cfbfb1',
   kitchen_sink: '',
@@ -61,7 +63,17 @@ const labels = {
 //  chat.postMessage to the user who created it
 //
 const sendConfirmation = (card) => {
-  const confirmationChannel = card.listId === feedbackList ? '#product-feedback' : '#bugs';
+  
+  let confirmationChannel = null;
+  
+  if (card.listId === newOnboardingFeedback) {
+    confirmationChannel = '#product-onboarding'
+  } else if (card.listId === newIssuesList) {
+    confirmationChannel = '#bugs'
+  } else {
+    confirmationChannel = '#product-feedback'
+  }
+  
   axios.post('https://slack.com/api/chat.postMessage', qs.stringify({
     token: process.env.SLACK_ACCESS_TOKEN,
     channel: confirmationChannel,
@@ -92,11 +104,15 @@ const sendConfirmation = (card) => {
 const createCard = (userId, submission) => {
   const card = {};
   
-  // assign the list ID
+  console.log("submission: ", submission);
+  
+  // assign to the right list, on the right board
   if (submission.type === 'bug') {
-    card.listId = issuesList
-  } else {
-    card.listId = feedbackList
+    card.listId = newIssuesList
+  } else if (submission.category === 'onboarding') {
+    card.listId = newOnboardingFeedback
+  } else {             
+    card.listId = newFeedbackList
   }
   
   // assign the labels
@@ -106,12 +122,12 @@ const createCard = (userId, submission) => {
     card.labelIds.push(labels[submission.category]);
     card.labelIds.push(labels[submission.type]);
     card.labelIds = card.labelIds.filter(id => id);
+    card.labelIds = card.labelIds.join();
   }
 
   const fetchUserName = new Promise((resolve, reject) => {
     users.find(userId).then((result) => {
       debug(`Find user: ${userId}`);
-      console.log("User info:", result.data.user);
       resolve(result.data.user.profile.real_name_normalized);
     }).catch((err) => { reject(err); });
   });
