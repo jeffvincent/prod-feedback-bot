@@ -53,7 +53,7 @@ app.post('/commands', (req, res) => {
             label: 'Description',
             type: 'textarea',
             name: 'description',
-            placeholder: `Context on the issue, support ticket URL, customers experiencing it, links to recordings, etc.`,
+            placeholder: `Context on the opportunity. Support ticket URL, customers experiencing it, links to recordings, etc.`,
           },
           {
             label: 'Proposed solution',
@@ -76,6 +76,7 @@ app.post('/commands', (req, res) => {
             type: 'select',
             name: 'category',
             options: [
+              { label: 'Onboarding', value: 'onboarding' },
               { label: 'Account/Install', value: 'account' },
               { label: 'Create', value: 'create' },
               { label: 'Target', value: 'target' },
