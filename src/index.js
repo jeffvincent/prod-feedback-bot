@@ -59,6 +59,7 @@ app.post('/commands', (req, res) => {
             label: 'Proposed solution',
             type: 'textarea',
             name: 'proposed_solution',
+            optional: true,
             placeholder: `What different ways could we solve this? (list lots as applicable)`,
           },
           {
@@ -77,13 +78,11 @@ app.post('/commands', (req, res) => {
             name: 'category',
             options: [
               { label: 'Onboarding', value: 'onboarding' },
-              { label: 'Account/Install', value: 'account' },
-              { label: 'Create', value: 'create' },
-              { label: 'Target', value: 'target' },
-              { label: 'Publish', value: 'publish' },
-              { label: 'Analyze', value: 'analyze' },
+              { label: 'Web App', value: 'web_app' },
+              { label: 'Flow Builder', value: 'crx' },
+              { label: 'SDK', value: 'sdk' },
               { label: 'General UX', value: 'general_ux' },
-              { label: 'Kitchen Sink', value: 'kitchen_sink' },
+              { label: 'Other', value: 'other' }
             ],
           }
         ],
