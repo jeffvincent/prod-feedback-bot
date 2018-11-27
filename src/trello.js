@@ -21,18 +21,11 @@ const trelloApi = axios.create({
 //  console.log(res.data.filter(board => board.name == "Product Feedback"))
 //})
 
-// feedbackBoard = '583ef59fd8bbcbd409ba5293'
-// issuesBoard = '583ef534ea189acacdcfedd2'
-const boardId = '583ef59fd8bbcbd409ba5293';
+// HINT: use the board IDs are stored in env file
 
 //trelloApi.get(`/boards/${boardId}/lists`).then(res => {
 //  console.log("Trello board lists:", res.data)
 //})
-
-
-const newFeedbackList = '5b8585b90a14bc2b75458891';
-const newIssuesList = '59f3384fd3edfd746350817c';
-const newOnboardingFeedback = '5bf31b780381150cd07d8312';
 
 // If you want to apply labels to your Trello cards based on input in the Slack dialog, first create the labels in Trello, then get their ids by uncommenting the following code:
 
@@ -40,17 +33,8 @@ const newOnboardingFeedback = '5bf31b780381150cd07d8312';
 //  console.log("Trello board labels:", response.data)
 //})
 
-// Define consts for the labels you care about here, then use those when creating the Trello card (see the 'createCard' method lower down in this file):
-//const unused_labels = {
-//  account: '5b85924b52c2c466b895c620',
-//  create: '5b8592530a0c2781d5075111',
-//  target: '5b859258a67e31197c2d4876',
-//  publish: '5b85925e8d0d394c7b29afc4',
-//  analyze: '5b8592627d7c6a81c766178f',
-//  nps: '5b86e4a14566116e92cfbfb1'
-//}
-
-// feedback labels
+// Define consts for the labels you care about here, used when creating card below.
+// note: include empty string for user-assigned values without a label, otherwise you'll get Trello error.
 const labels = {
   onboarding: '5bf31bc43cb5ca740bffba45',
   web_app: '5bf48abe3c6a551c772c595b',
@@ -70,7 +54,7 @@ const labels = {
 const sendConfirmation = (card) => {
   
   // send all non-bugs feedback into #product-feedback
-  const confirmationChannel = card.listId === newIssuesList ? '#bugs' : '#product-feedback'
+  const confirmationChannel = card.listId === process.env.ISSUES_LIST_ID ? '#bugs' : '#product-feedback'
   
   axios.post('https://slack.com/api/chat.postMessage', qs.stringify({
     token: process.env.SLACK_ACCESS_TOKEN,
@@ -106,11 +90,11 @@ const createCard = (userId, submission) => {
   
   // assign to the right list, on the right board
   if (submission.type === 'bug') {
-    card.listId = newIssuesList
+    card.listId = process.env.ISSUES_LIST_ID
   } else if (submission.category === 'onboarding') {
-    card.listId = newOnboardingFeedback
+    card.listId = process.env.ONBOARDING_LIST_ID
   } else {             
-    card.listId = newFeedbackList
+    card.listId = process.env.FEEDBACK_LIST_ID
   }
   
   // assign the labels
