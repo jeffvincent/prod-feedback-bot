@@ -85,6 +85,8 @@ const sendConfirmation = (card) => {
 // from their user ID
 const createCard = (userId, submission) => {
   const card = {};
+  let userRealName = null;
+  let trelloMemberId = null;
   
   console.log("submission: ", submission);
   
@@ -113,21 +115,35 @@ const createCard = (userId, submission) => {
       resolve(result.data.user.profile.real_name_normalized);
     }).catch((err) => { reject(err); });
   });
+  
+  const fetchTrelloMemberId = new Promise((resolve, reject) => {
+    trelloApi.get('/organization/appcues/members').then((response) => {
+      console.log('userRealName is set as: ', userRealName);
+      console.log(`heres what the filter gave us: ${response.data.filter(m => m.fullName === userRealName)[0].id}`);
+      resolve(response.data.filter(m => m.fullName === userRealName)[0].id);
+    }).catch((err) => { reject(err); });
+  });
 
   fetchUserName.then((result) => {
+    userRealName = result;
+    return fetchTrelloMemberId;
+  }).then((result) => {
+    console.log('result: ', result);
     card.userId = userId;
-    card.userRealName = result;
+    card.userRealName = userRealName;
     card.title = submission.title;
     card.description = submission.description;
     card.type = submission.type;
+    card.memberIds = [result];
     
-    console.log('label ids:', card.labelIds)
+    console.log('trelloMemberid: ', result, card.memberIds);
     
     trelloApi.post('/cards', qs.stringify({
       idList: card.listId,
       name: submission.title,
       desc: `${submission.description}\n\n---\n Proposed Solution \n ${submission.proposed_solution}\n\n---\n Submitted by ${card.userRealName}`,
-      idLabels: card.labelIds
+      idLabels: card.labelIds,
+      idMembers: card.memberIds
     }))
     .then((response) => {
       card.shortUrl = response.data.shortUrl;
