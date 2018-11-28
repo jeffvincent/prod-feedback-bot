@@ -119,8 +119,9 @@ const createCard = (userId, submission) => {
   const fetchTrelloMemberId = new Promise((resolve, reject) => {
     trelloApi.get('/organization/appcues/members').then((response) => {
       console.log('userRealName is set as: ', userRealName);
-      console.log(`heres what the filter gave us: ${response.data.filter(m => m.fullName === userRealName)[0].id}`);
-      resolve(response.data.filter(m => m.fullName === userRealName)[0].id);
+      let member = response.data.filter(m => m.fullName === userRealName);
+      console.log('member is: ', member[0]);
+      resolve(member && member[0] && member[0].id);
     }).catch((err) => { reject(err); });
   });
 
@@ -147,7 +148,7 @@ const createCard = (userId, submission) => {
     }))
     .then((response) => {
       card.shortUrl = response.data.shortUrl;
-      sendConfirmation(card);
+      //sendConfirmation(card);
     })
     .catch(function (error) {
       if (error.response) {
