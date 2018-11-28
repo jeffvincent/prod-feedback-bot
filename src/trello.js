@@ -40,6 +40,7 @@ const labels = {
   web_app: '5bf48abe3c6a551c772c595b',
   crx: '5bf48ac7585e310ad5f533ba',
   sdk: '5bf48ad2966b9c5506cc0575',
+  mobile: '5bfed5006bc6e811965f565b',
   other: '',
   general_ux: '5b8592679f87303b1017fffa',
   feature_request: '5b85b6d1126cf681ff088311',
@@ -148,7 +149,7 @@ const createCard = (userId, submission) => {
     }))
     .then((response) => {
       card.shortUrl = response.data.shortUrl;
-      //sendConfirmation(card);
+      sendConfirmation(card);
     })
     .catch(function (error) {
       if (error.response) {
