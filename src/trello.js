@@ -40,6 +40,7 @@ const labels = {
   web_app: '5bf48abe3c6a551c772c595b',
   crx: '5bf48ac7585e310ad5f533ba',
   sdk: '5bf48ad2966b9c5506cc0575',
+  mobile: '5bfed5006bc6e811965f565b',
   other: '',
   general_ux: '5b8592679f87303b1017fffa',
   feature_request: '5b85b6d1126cf681ff088311',
@@ -85,6 +86,8 @@ const sendConfirmation = (card) => {
 // from their user ID
 const createCard = (userId, submission) => {
   const card = {};
+  let userRealName = null;
+  let trelloMemberId = null;
   
   console.log("submission: ", submission);
   
@@ -113,21 +116,36 @@ const createCard = (userId, submission) => {
       resolve(result.data.user.profile.real_name_normalized);
     }).catch((err) => { reject(err); });
   });
+  
+  const fetchTrelloMemberId = new Promise((resolve, reject) => {
+    trelloApi.get('/organization/appcues/members').then((response) => {
+      console.log('userRealName is set as: ', userRealName);
+      let member = response.data.filter(m => m.fullName === userRealName);
+      console.log('member is: ', member[0]);
+      resolve(member && member[0] && member[0].id);
+    }).catch((err) => { reject(err); });
+  });
 
   fetchUserName.then((result) => {
+    userRealName = result;
+    return fetchTrelloMemberId;
+  }).then((result) => {
+    console.log('result: ', result);
     card.userId = userId;
-    card.userRealName = result;
+    card.userRealName = userRealName;
     card.title = submission.title;
     card.description = submission.description;
     card.type = submission.type;
+    card.memberIds = [result];
     
-    console.log('label ids:', card.labelIds)
+    console.log('trelloMemberid: ', result, card.memberIds);
     
     trelloApi.post('/cards', qs.stringify({
       idList: card.listId,
       name: submission.title,
       desc: `${submission.description}\n\n---\n Proposed Solution \n ${submission.proposed_solution}\n\n---\n Submitted by ${card.userRealName}`,
-      idLabels: card.labelIds
+      idLabels: card.labelIds,
+      idMembers: card.memberIds
     }))
     .then((response) => {
       card.shortUrl = response.data.shortUrl;

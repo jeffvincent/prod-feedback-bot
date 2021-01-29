@@ -81,6 +81,7 @@ app.post('/commands', (req, res) => {
               { label: 'Web App', value: 'web_app' },
               { label: 'Flow Builder', value: 'crx' },
               { label: 'SDK', value: 'sdk' },
+              { label: 'Mobile', value: 'mobile' },
               { label: 'General UX', value: 'general_ux' },
               { label: 'Other', value: 'other' }
             ],
